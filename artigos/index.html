@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- ===============================
+       SEO FOR HUB PAGE
+  ================================== -->
+  <title>Artigos – Preparação para o Exame CIPLE</title>
+
+  <meta name="description"
+        content="Artigos aprofundados sobre o exame CIPLE, cidadania portuguesa, preparação eficaz e estratégias comprovadas. Perfeito para passar no exame de português A2.">
+
+  <link rel="canonical" href="https://cipleonline.pt/artigos" />
+
+  <!-- ===============================
+       OPEN GRAPH
+  ================================== -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Artigos – Preparação para o Exame CIPLE">
+  <meta property="og:description"
+        content="Leia nossa coleção completa de artigos focados no exame CIPLE e cidadania portuguesa.">
+  <meta property="og:image"
+        content="https://cipleonline.pt/assets/images/articles/hero-articles.webp">
+  <meta property="og:url" content="https://cipleonline.pt/artigos">
+  <meta property="og:site_name" content="CipleOnline.pt">
+
+  <!-- ===============================
+       TWITTER
+  ================================== -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Artigos – Preparação para o Exame CIPLE">
+  <meta name="twitter:description"
+        content="Uma coleção estruturada de artigos para o exame CIPLE em Portugal.">
+  <meta name="twitter:image"
+        content="https://cipleonline.pt/assets/images/articles/hero-articles.webp">
+
+  <link rel="stylesheet" href="/assets/css/shared.css">
+  <link rel="stylesheet" href="/assets/css/blog.css">
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+
+    <div class="header-left">
+      <a href="/" class="brand-link">
+        <img src="/assets/images/pt.svg" alt="Portugal">
+        <div class="brand-title">CipleOnline.pt</div>
+      </a>
+    </div>
+
+    <div class="header-center">
+      <nav class="header-nav">
+        <a href="/sobre-o-exame/">Sobre o exame</a>
+        <a href="/teste-gratuito/">Teste grátis</a>
+        <a href="/contacto/">Contacto</a>
+        <a href="https://civiclearn.com/ciple/login">Login</a>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <div class="brand-powered">powered by <span>CivicLearn</span></div>
+      <a href="https://civiclearn.com/ciple/checkout" class="btn-small-purple">Inscrição</a>
+    </div>
+
+  </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="articles-hero">
+  <h1>Artigos para o exame CIPLE</h1>
+  <p class="articles-hero-subtitle">
+    Artigos especializados e precisos que cobrem temas centrais do exame CIPLE: preparação, estratégias, requisitos de cidadania e proficiência em português nível A2.
+  </p>
+  <a href="https://civiclearn.com/ciple/checkout" class="cta-purple">Comece seu treino</a>
+</section>
+
+<!-- FEATURED ARTICLE (DYNAMIC) -->
+<section class="featured-article">
+  <h2>Artigo em destaque</h2>
+
+  <a id="featured-card" class="featured-card" href="#">
+    <div class="featured-card-image">
+      <img id="featured-image" src="" alt="">
+    </div>
+    <div class="featured-card-content">
+      <h3 id="featured-title"></h3>
+      <p id="featured-desc"></p>
+      <span class="featured-read-more">Ler artigo →</span>
+    </div>
+  </a>
+</section>
+
+
+<!-- GRID OF ALL ARTICLES -->
+
+<section class="articles-grid-section">
+  <h2>Todos os artigos</h2>
+  <div class="articles-grid" id="articlesGrid"></div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="articles-cta-bottom">
+  <h3>Quer passar no exame CIPLE na primeira vez?</h3>
+  <p>Faça simulações completas, veja estatísticas e treine todos os temas de forma direcionada.</p>
+  <a href="https://civiclearn.com/ciple/checkout" class="cta-purple">Obter acesso completo</a>
+</section>
+
+<footer class="cl-footer">
+  <div class="cl-footer-inner">
+    © <span id="footer-year"></span> 
+    <span class="cl-footer-brand">CivicLearn</span> by Testrada – Todos os direitos reservados.
+  </div>
+</footer>
+<script>
+(async function () {
+  const res = await fetch('/artigos/articles.json');
+  const all = await res.json();
+
+  // Daily rotation based on date
+  const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+  const index = dayIndex % all.length;
+  const a = all[index];
+
+  // Inject into featured card
+  document.getElementById("featured-card").href = a.url;
+  document.getElementById("featured-image").src = a.image;
+  document.getElementById("featured-image").alt = a.title;
+  document.getElementById("featured-title").textContent = a.title;
+  document.getElementById("featured-desc").textContent = a.desc;
+})();
+</script>
+
+<script>
+(async function () {
+  const grid = document.getElementById("articlesGrid");
+  if (!grid) return;
+
+  const res = await fetch('/artigos/articles.json');
+  const all = await res.json();
+
+  // Sort alphabetically (optional)
+  all.sort((a, b) => a.title.localeCompare(b.title));
+
+  grid.innerHTML = all.map(a => `
+    <a href="${a.url}" class="blog-card">
+      <img src="${a.image}" alt="${a.title}">
+      <div class="blog-card-body">
+        <h3>${a.title}</h3>
+        <p>${a.desc}</p>
+      </div>
+    </a>
+  `).join('');
+})();
+</script>
+
+<script>
+  document.getElementById("footer-year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+# robots.txt for CipleOnline.pt
+
+User-agent: *
+Allow: /
+
+# Disallow admin/private areas (if any exist)
+Disallow: /admin/
+Disallow: /private/
+
+# Allow crawling of assets for better indexing
+Allow: /assets/css/
+Allow: /assets/images/
+Allow: /assets/audio/
+
+# Sitemap location
+Sitemap: https://cipleonline.pt/sitemap.xml

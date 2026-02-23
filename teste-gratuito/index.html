@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Teste grátis CIPLE online – pratique com perguntas reais de leitura e compreensão oral. Prepare-se para o exame de português A2 com CipleOnline.pt">
+  <link rel="canonical" href="https://cipleonline.pt/teste-gratuito/">
+  <title>Teste Grátis - CipleOnline.pt</title>
+  
+  <link rel="stylesheet" href="/assets/css/shared.css">
+  
+  <style>
+    /* Free Test Specific Styles */
+    .test-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .test-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+    
+    .progress-bar {
+      height: 8px;
+      background: #e5e2db;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7c3aed, #a78bfa);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    
+    .progress-text {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    
+    .question-section {
+      display: none;
+    }
+    
+    .question-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 0.5rem;
+    }
+    
+    .question-prompt {
+      font-size: 1.05rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .audio-player {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #f9f8f5;
+      border-radius: 12px;
+    }
+    
+    .audio-player audio {
+      width: 100%;
+    }
+    
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    
+    .option {
+      padding: 1rem 1.25rem;
+      background: #f9f8f5;
+      border: 2px solid #e5e2db;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+      text-align: left;
+    }
+    
+    .option:hover {
+      background: #f0eee6;
+      border-color: #d0cdc3;
+    }
+    
+    .option.selected {
+      background: #ede9fe;
+      border-color: #7c3aed;
+    }
+    
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+    
+    .btn {
+      padding: 0.85rem 1.75rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    
+    .btn-primary {
+      background: #7c3aed;
+      color: #fff;
+    }
+    
+    .btn-primary:hover {
+      background: #6d28d9;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: #e5e2db;
+      color: #333;
+    }
+    
+    .btn-secondary:hover {
+      background: #d0cdc3;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    /* Welcome Screen */
+    .welcome-screen {
+      text-align: center;
+    }
+    
+    .welcome-screen h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+    
+    .welcome-screen p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    
+    .test-info {
+      background: #f9f8f5;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+    
+    .test-info h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+    
+    .test-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .test-info li {
+      padding: 0.5rem 0;
+      font-size: 0.95rem;
+      color: #555;
+    }
+    
+    .test-info li:before {
+      content: "✓ ";
+      color: #7c3aed;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+    
+    /* Results Screen */
+    .results-screen {
+      text-align: center;
+      display: none;
+    }
+    
+    .results-screen.active {
+      display: block;
+    }
+    
+    .score-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      margin: 2rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+    }
+    
+    .results-screen h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+    
+    .results-screen p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 2rem;
+    }
+    
+    .score-breakdown {
+      background: #f9f8f5;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      text-align: left;
+    }
+    
+    .score-breakdown h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .score-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e5e2db;
+    }
+    
+    .score-item:last-child {
+      border-bottom: none;
+    }
+    
+    .cta-box {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .cta-box h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+    
+    .cta-box li {
+      padding: 0.5rem 0;
+      font-size: 1rem;
+    }
+    
+    .cta-box li:before {
+      content: "✓ ";
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+    
+    .btn-white {
+      background: #fff;
+      color: #7c3aed;
+      font-weight: 700;
+    }
+    
+    .btn-white:hover {
+      background: #f9f8f5;
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="/" class="brand-link">
+        <img src="/assets/images/pt.svg" alt="Portugal">
+        <div class="brand-title">CipleOnline.pt</div>
+      </a>
+    </div>
+    <div class="header-center">
+      <nav class="header-nav">
+        <a href="/sobre-o-exame/">Sobre o exame</a>
+        <a href="/teste-gratuito/">Teste grátis</a>
+        <a href="/artigos/">Artigos</a>
+        <a href="/contacto/">Contacto</a>
+        <a href="https://civiclearn.com/ciple/login">Login</a>
+      </nav>
+    </div>
+    <div class="header-right">
+      <div class="brand-powered">powered by <span>CivicLearn</span></div>
+      <a href="https://civiclearn.com/ciple/checkout" class="btn-small-purple">Inscrição</a>
+    </div>
+  </div>
+</header>
+
+<div class="test-container">
+  <div class="test-card">
+    
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="welcome-screen">
+      <h1>Teste Grátis CIPLE</h1>
+      <p>Experimente uma amostra do exame CIPLE com questões de leitura e compreensão oral.</p>
+      
+      <div class="test-info">
+        <h3>O que vai fazer:</h3>
+        <ul>
+          <li>8 questões (4 de leitura + 4 de compreensão oral)</li>
+          <li>Avaliação automática e imediata</li>
+          <li>Sem registo necessário</li>
+          <li>Aproximadamente 10 minutos</li>
+        </ul>
+      </div>
+      
+      <button class="btn btn-primary" onclick="startTest()">Começar teste</button>
+    </div>
+    
+    <!-- Test Screen -->
+    <div id="testScreen" style="display: none;">
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+      </div>
+      <div id="progressText" class="progress-text">Questão 1 de 8</div>
+      
+      <div id="questionsContainer"></div>
+      
+      <div class="nav-buttons">
+        <button id="prevBtn" class="btn btn-secondary" onclick="previousQuestion()" style="display: none;">Anterior</button>
+        <button id="nextBtn" class="btn btn-primary" onclick="nextQuestion()" disabled>Próxima</button>
+        <button id="submitBtn" class="btn btn-primary" onclick="submitTest()" style="display: none;">Ver Resultados</button>
+      </div>
+    </div>
+    
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="results-screen">
+      <h2>Teste Concluído!</h2>
+      <div class="score-circle">
+        <span id="finalScore">0%</span>
+      </div>
+      <p id="scoreMessage">Excelente trabalho!</p>
+      
+      <div class="score-breakdown">
+        <h3>Resultados por Secção</h3>
+        <div class="score-item">
+          <span>Leitura</span>
+          <strong id="readingScore">0/4</strong>
+        </div>
+        <div class="score-item">
+          <span>Compreensão Oral</span>
+          <strong id="listeningScore">0/4</strong>
+        </div>
+        <div class="score-item">
+          <span>Total</span>
+          <strong id="totalScore">0/8</strong>
+        </div>
+      </div>
+      
+      <div class="cta-box">
+        <h3>Pronto para o exame completo?</h3>
+        <ul>
+          <li>20 simulações completas do exame CIPLE</li>
+          <li>Avaliação por IA para escrita e produção oral</li>
+          <li>Estatísticas detalhadas de progressão</li>
+          <li>Feedback personalizado para melhorar</li>
+        </ul>
+        <a href="https://civiclearn.com/ciple/checkout" class="btn btn-white">Obter Acesso Completo</a>
+      </div>
+      
+      <button class="btn btn-secondary" onclick="restartTest()" style="margin-top: 1.5rem;">Repetir Teste</button>
+    </div>
+    
+  </div>
+</div>
+
+<footer class="cl-footer">
+  <div class="cl-footer-inner">
+    © <span id="footer-year"></span> 
+    <span class="cl-footer-brand">CivicLearn</span> by Testrada – Todos os direitos reservados.
+  </div>
+</footer>
+
+<script>
+// Test data - 4 reading + 4 listening questions
+const testQuestions = [
+  // READING QUESTIONS
+  {
+    id: 'r1',
+    section: 'reading',
+    title: 'Leitura 1',
+    prompt: 'O Duarte está à procura de trabalho.',
+    type: 'text',
+    options: [
+      { id: 'm1', text: 'Enviei o meu currículo para 10 empresas, mas nenhuma respondeu à minha candidatura.' },
+      { id: 'm2', text: 'Não fui a nenhuma entrevista de trabalho. Tenho estado a trabalhar com o meu pai.' },
+      { id: 'm3', text: 'A empresa onde trabalho está à procura de novos colaboradores. Queres candidatar-te?' }
+    ],
+    correct: 'm1'
+  },
+  {
+    id: 'r2',
+    section: 'reading',
+    title: 'Leitura 2',
+    prompt: 'A Joana quer falar com a Renata.',
+    type: 'text',
+    options: [
+      { id: 'm1', text: 'Renata, precisamos de discutir o seu desempenho neste projeto. Tem disponibilidade?' },
+      { id: 'm2', text: 'Renata, hoje não tenho disponibilidade. Se quiser falar, procure-me para a semana.' },
+      { id: 'm3', text: 'Renata, o funcionário de RH está à sua procura. Pelos vistos, quer falar consigo.' }
+    ],
+    correct: 'm1'
+  },
+  {
+    id: 'r3',
+    section: 'reading',
+    title: 'Leitura 3',
+    prompt: 'O Pedro não vai trabalhar amanhã.',
+    type: 'text',
+    options: [
+      { id: 'm1', text: 'Amanhã não vou poder ir trabalhar. Tenho de ir ao médico com a minha mãe.' },
+      { id: 'm2', text: 'Vou trabalhar amanhã de manhã, mas à tarde tenho de sair mais cedo.' },
+      { id: 'm3', text: 'Amanhã trabalho o dia todo, mas depois vou sair com os meus amigos.' }
+    ],
+    correct: 'm1'
+  },
+  {
+    id: 'r4',
+    section: 'reading',
+    title: 'Leitura 4',
+    prompt: 'A Maria quer comprar um carro novo.',
+    type: 'text',
+    options: [
+      { id: 'm1', text: 'O meu carro avariou outra vez. Acho que está na hora de comprar um novo.' },
+      { id: 'm2', text: 'Comprei um carro novo no mês passado. Estou muito satisfeita com ele.' },
+      { id: 'm3', text: 'Não preciso de carro novo. O meu ainda está em bom estado.' }
+    ],
+    correct: 'm1'
+  },
+  // LISTENING QUESTIONS
+  {
+    id: 'l1',
+    section: 'listening',
+    title: 'Compreensão Oral 1',
+    prompt: 'Segundo o excerto, a comissão de manutenção de conta bancária é mais baixa quando existe domiciliação do ordenado?',
+    type: 'audio',
+    audio: '/assets/audio/19/CIPLE-18.mp3',
+    options: [
+      { id: 'o1', text: 'Não é possível determinar.' },
+      { id: 'o2', text: 'Falso.' },
+      { id: 'o3', text: 'Verdadeiro.' }
+    ],
+    correct: 'o3'
+  },
+  {
+    id: 'l2',
+    section: 'listening',
+    title: 'Compreensão Oral 2',
+    prompt: 'A campanha de doação vai decorrer',
+    type: 'audio',
+    audio: '/assets/audio/19/CIPLE-18-1.mp3',
+    options: [
+      { id: 'o1', text: 'durante uma semana.' },
+      { id: 'o2', text: 'durante a semana.' },
+      { id: 'o3', text: 'durante o fim de semana.' }
+    ],
+    correct: 'o3'
+  },
+  {
+    id: 'l3',
+    section: 'listening',
+    title: 'Compreensão Oral 3',
+    prompt: 'O crescimento do comércio online foi … pela COVID-19.',
+    type: 'audio',
+    audio: '/assets/audio/19/CIPLE-18-2.mp3',
+    options: [
+      { id: 'o1', text: 'Minimizado.' },
+      { id: 'o2', text: 'Estimulado.' },
+      { id: 'o3', text: 'Prejudicado.' }
+    ],
+    correct: 'o2'
+  },
+  {
+    id: 'l4',
+    section: 'listening',
+    title: 'Compreensão Oral 4',
+    prompt: 'O orador está a agradecer a prenda da amiga',
+    type: 'audio',
+    audio: '/assets/audio/19/CIPLE-18-3.mp3',
+    options: [
+      { id: 'o1', text: 'no ano novo.' },
+      { id: 'o2', text: 'no Natal.' },
+      { id: 'o3', text: 'no aniversário.' }
+    ],
+    correct: 'o3'
+  }
+];
+
+let currentQuestionIndex = 0;
+let userAnswers = {};
+
+function startTest() {
+  document.getElementById('welcomeScreen').style.display = 'none';
+  document.getElementById('testScreen').style.display = 'block';
+  renderQuestions();
+  showQuestion(0);
+}
+
+function renderQuestions() {
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+  
+  testQuestions.forEach((q, index) => {
+    const section = document.createElement('div');
+    section.className = 'question-section';
+    section.id = `question-${index}`;
+    
+    let content = `
+      <div class="question-title">${q.title}</div>
+      <div class="question-prompt">${q.prompt}</div>
+    `;
+    
+    if (q.type === 'audio') {
+      content += `
+        <div class="audio-player">
+          <audio controls>
+            <source src="${q.audio}" type="audio/mpeg">
+            O seu navegador não suporta áudio.
+          </audio>
+        </div>
+      `;
+    }
+    
+    content += '<div class="options">';
+    q.options.forEach(opt => {
+      content += `
+        <div class="option" data-question="${q.id}" data-option="${opt.id}" onclick="selectOption('${q.id}', '${opt.id}')">
+          ${opt.text}
+        </div>
+      `;
+    });
+    content += '</div>';
+    
+    section.innerHTML = content;
+    container.appendChild(section);
+  });
+}
+
+function showQuestion(index) {
+  document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`question-${index}`).classList.add('active');
+  
+  currentQuestionIndex = index;
+  updateProgress();
+  updateNavButtons();
+  
+  // Restore selected answer if exists
+  const q = testQuestions[index];
+  if (userAnswers[q.id]) {
+    const selected = document.querySelector(`[data-question="${q.id}"][data-option="${userAnswers[q.id]}"]`);
+    if (selected) selected.classList.add('selected');
+  }
+}
+
+function selectOption(questionId, optionId) {
+  // Clear previous selection
+  document.querySelectorAll(`[data-question="${questionId}"]`).forEach(opt => {
+    opt.classList.remove('selected');
+  });
+  
+  // Select new option
+  const selected = document.querySelector(`[data-question="${questionId}"][data-option="${optionId}"]`);
+  selected.classList.add('selected');
+  
+  // Save answer
+  userAnswers[questionId] = optionId;
+  
+  // Enable next button
+  document.getElementById('nextBtn').disabled = false;
+  if (currentQuestionIndex === testQuestions.length - 1) {
+    document.getElementById('submitBtn').disabled = false;
+  }
+}
+
+function nextQuestion() {
+  if (currentQuestionIndex < testQuestions.length - 1) {
+    showQuestion(currentQuestionIndex + 1);
+  }
+}
+
+function previousQuestion() {
+  if (currentQuestionIndex > 0) {
+    showQuestion(currentQuestionIndex - 1);
+  }
+}
+
+function updateProgress() {
+  const progress = ((currentQuestionIndex + 1) / testQuestions.length) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+  document.getElementById('progressText').textContent = `Questão ${currentQuestionIndex + 1} de ${testQuestions.length}`;
+}
+
+function updateNavButtons() {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  // Show/hide previous button
+  prevBtn.style.display = currentQuestionIndex > 0 ? 'block' : 'none';
+  
+  // Show/hide next vs submit
+  if (currentQuestionIndex === testQuestions.length - 1) {
+    nextBtn.style.display = 'none';
+    submitBtn.style.display = 'block';
+    submitBtn.disabled = !userAnswers[testQuestions[currentQuestionIndex].id];
+  } else {
+    nextBtn.style.display = 'block';
+    submitBtn.style.display = 'none';
+    nextBtn.disabled = !userAnswers[testQuestions[currentQuestionIndex].id];
+  }
+}
+
+function submitTest() {
+  // Calculate scores
+  let readingCorrect = 0;
+  let listeningCorrect = 0;
+  let totalCorrect = 0;
+  
+  testQuestions.forEach(q => {
+    if (userAnswers[q.id] === q.correct) {
+      totalCorrect++;
+      if (q.section === 'reading') readingCorrect++;
+      if (q.section === 'listening') listeningCorrect++;
+    }
+  });
+  
+  const percentage = Math.round((totalCorrect / testQuestions.length) * 100);
+  
+  // Display results
+  document.getElementById('testScreen').style.display = 'none';
+  document.getElementById('resultsScreen').classList.add('active');
+  
+  document.getElementById('finalScore').textContent = percentage + '%';
+  document.getElementById('readingScore').textContent = `${readingCorrect}/4`;
+  document.getElementById('listeningScore').textContent = `${listeningCorrect}/4`;
+  document.getElementById('totalScore').textContent = `${totalCorrect}/8`;
+  
+  // Score message
+  let message = '';
+  if (percentage >= 80) message = 'Excelente! Está muito bem preparado!';
+  else if (percentage >= 60) message = 'Bom resultado! Continue a praticar.';
+  else message = 'Continue a estudar. A prática leva à perfeição!';
+  
+  document.getElementById('scoreMessage').textContent = message;
+}
+
+function restartTest() {
+  currentQuestionIndex = 0;
+  userAnswers = {};
+  
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('testScreen').style.display = 'none';
+  document.getElementById('welcomeScreen').style.display = 'block';
+}
+
+// Footer year
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
