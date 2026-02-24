@@ -1,0 +1,22 @@
+# cipleonline.pt — Redirects for old URLs not on new site
+# Format: old_path new_path status_code
+
+# Old login/register/dashboard → civiclearn
+/iniciar-sessao/ https://civiclearn.com/ciple/login.html 301
+/register/ https://civiclearn.com/ciple/checkout 301
+/painel-de-controle/ https://civiclearn.com/ciple/login.html 301
+/exames-11-20/ https://civiclearn.com/ciple/login.html 301
+
+# Renamed policy pages
+/politica-de-reembolso/ /reembolsos/ 301
+/termos-e-condicoes/ /condicoes/ 301
+/politica-de-privacidade/ /confidencialidade/ 301
+
+# Old help page
+/ajuda/ /contacto/ 301
+
+# Tag pages → homepage
+/tag/* / 301
+
+# Category pages → homepage
+/category/* / 301
