@@ -698,7 +698,7 @@ function findCurrentPair() {
 
   for (let i = 0; i < CIPLE_SCHEDULE.length; i++) {
     const testDate = new Date(CIPLE_SCHEDULE[i].test + "T00:00:00");
-    if (testDate >= now) {
+    if (testDate > now) {
       return {
         current: CIPLE_SCHEDULE[i],
         next: CIPLE_SCHEDULE[i + 1] || null
