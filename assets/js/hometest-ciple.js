@@ -1,14 +1,20 @@
-// ----------------------------
-// SETTINGS
-// ----------------------------
-const QUESTIONS_PER_ROW = 3;
-
-// ----------------------------
-// FULL QUESTION POOL — CIPLE (Portuguese A2, "hard A2")
-// Prepositions, idioms, ser/estar, por/para, pronoun placement,
-// false friends, irregular verbs, subjunctive triggers, articles
-// ----------------------------
-const INLINE_TEST_QUESTIONS = [
+// Free practice questions shown on the homepage.
+// Only the questions and texts live here. The quiz itself is built by the shared CivicLearn
+// script https://civiclearn.com/assets/js/presale-quiz.js, which the page loads right after this file.
+window.CL_QUIZ = {
+  i18n: {
+    "progressFmt": "Progresso: {n} / {t} questões",
+    "correct": "Correto!",
+    "wrongPfx": "Resposta correta: ",
+    "t80": "Excelente trabalho!",
+    "t50": "Muito bem!",
+    "t25": "Bom começo!",
+    "t0": "Continue a treinar",
+    "body": "Terminou as questões de exemplo gratuitas. Obtenha acesso a <strong>todos os simulados e exercícios</strong>, com explicações detalhadas.",
+    "cta": "Acesso completo",
+    "ctaUrl": "https://civiclearn.com/ciple/checkout.html"
+  },
+  questions: [
   {
     q: "Ele está sempre a meter água. O que significa esta expressão?",
     a: [
@@ -189,189 +195,5 @@ const INLINE_TEST_QUESTIONS = [
     ],
     correct: 0
   }
-];
-
-// ----------------------------
-// STATE
-// ----------------------------
-let correctCount = 0;
-let wrongCount = 0;
-let answeredCount = 0;
-let totalQuestions = INLINE_TEST_QUESTIONS.length;
-
-let currentRow = 0;
-
-// ----------------------------
-// UI TARGETS
-// ----------------------------
-const container = document.getElementById("inline-test-questions");
-
-// ----------------------------
-// PROGRESS DISPLAY
-// ----------------------------
-function updateProgressDisplay() {
-  document.getElementById("inline-progress-text").textContent =
-    `Progresso: ${answeredCount} / ${totalQuestions} questões`;
-}
-
-function updateProgressBar() {
-  const pct = (answeredCount / totalQuestions) * 100;
-  document.getElementById("inline-progressbar").style.width = pct + "%";
-}
-
-// ----------------------------
-// UTILITIES
-// ----------------------------
-function shuffleAnswers(question) {
-  const combined = question.a.map((opt, index) => ({
-    text: opt,
-    isCorrect: index === question.correct
-  }));
-
-  for (let i = combined.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [combined[i], combined[j]] = [combined[j], combined[i]];
-  }
-
-  question.a = combined.map(i => i.text);
-  question.correct = combined.findIndex(i => i.isCorrect);
-}
-
-function createDonutChart() {
-  const pct = Math.round((correctCount / totalQuestions) * 100);
-  const C = 2 * Math.PI * 40;
-
-  return `
-    <div class="donut-wrapper">
-      <svg width="120" height="120" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="40" stroke="#ebe6ff" stroke-width="12" fill="none"></circle>
-        <circle cx="50" cy="50" r="40" stroke="#6d4aff" stroke-width="12" fill="none"
-          stroke-dasharray="${(pct / 100) * C} ${(1 - pct / 100) * C}"
-          transform="rotate(-90 50 50)" stroke-linecap="round"></circle>
-      </svg>
-      <div class="donut-center">${pct}%</div>
-    </div>
-  `;
-}
-
-function createEndCard() {
-  const pct = Math.round((correctCount / totalQuestions) * 100);
-  const card = document.createElement("div");
-  card.className = "inline-question-card end-card";
-
-  const title =
-    pct >= 80 ? "Excelente trabalho!" :
-    pct >= 50 ? "Muito bem!" :
-    pct >= 25 ? "Bom começo!" :
-    "Continue a treinar";
-
-  card.innerHTML = `
-    <h3>${title}</h3>
-    ${createDonutChart()}
-    <p>Terminou as questões de exemplo gratuitas.
-    Obtenha acesso a <strong>todos os simulados e exercícios</strong>, com explicações detalhadas.</p>
-    <a href="https://civiclearn.com/ciple/checkout.html" class="hero-primary-btn">Acesso completo</a>
-  `;
-
-  return card;
-}
-
-// ----------------------------
-// BUILD ROWS
-// ----------------------------
-const rows = [];
-for (let i = 0; i < totalQuestions; i += QUESTIONS_PER_ROW) {
-  rows.push(INLINE_TEST_QUESTIONS.slice(i, i + QUESTIONS_PER_ROW));
-}
-
-INLINE_TEST_QUESTIONS.forEach(q => shuffleAnswers(q));
-
-// ----------------------------
-// RENDERING
-// ----------------------------
-function renderRow(rowIndex) {
-  if (!rows[rowIndex]) return;
-
-  rows[rowIndex].forEach((q, offset) => {
-    const absoluteIndex = rowIndex * QUESTIONS_PER_ROW + offset;
-    container.appendChild(createQuestionCard(q, absoluteIndex));
-  });
-}
-
-function createQuestionCard(questionObj, absoluteIndex) {
-  const card = document.createElement("div");
-  card.className = "inline-question-card";
-
-  const title = document.createElement("h3");
-  title.textContent = questionObj.q;
-
-  const feedback = document.createElement("div");
-  feedback.className = "inline-feedback";
-
-  card.append(title);
-
-  questionObj.a.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.className = "inline-option-btn";
-    btn.textContent = opt;
-
-    btn.onclick = () => {
-      answeredCount++;
-      updateProgressDisplay();
-      updateProgressBar();
-
-      // Disable all buttons first
-      card.querySelectorAll("button").forEach(b => (b.disabled = true));
-
-      if (i === questionObj.correct) {
-        correctCount++;
-        btn.style.background = "rgba(24, 160, 110, 0.15)";
-        btn.style.borderColor = "#18a06e";
-        btn.style.color = "#14805a";
-        feedback.textContent = "Correto!";
-        feedback.classList.add("inline-correct");
-      } else {
-        wrongCount++;
-        btn.style.background = "rgba(230, 57, 70, 0.12)";
-        btn.style.borderColor = "#e63946";
-        btn.style.color = "#c5303b";
-        // Highlight the correct answer in green
-        const allBtns = card.querySelectorAll("button");
-        allBtns[questionObj.correct].style.background = "rgba(24, 160, 110, 0.15)";
-        allBtns[questionObj.correct].style.borderColor = "#18a06e";
-        allBtns[questionObj.correct].style.color = "#14805a";
-        feedback.textContent =
-          "Resposta correta: " + questionObj.a[questionObj.correct];
-        feedback.classList.add("inline-wrong");
-      }
-
-      card.appendChild(feedback);
-
-      const isLastQuestion = absoluteIndex === totalQuestions - 1;
-
-      if (isLastQuestion) {
-        setTimeout(() => container.appendChild(createEndCard()), 300);
-      }
-
-      const isLastInRow =
-        (absoluteIndex + 1) % QUESTIONS_PER_ROW === 0 &&
-        absoluteIndex !== totalQuestions - 1;
-
-      if (isLastInRow) {
-        currentRow++;
-        renderRow(currentRow);
-      }
-    };
-
-    card.appendChild(btn);
-  });
-
-  return card;
-}
-
-// ----------------------------
-// INITIAL RENDER
-// ----------------------------
-renderRow(0);
-updateProgressDisplay();
-updateProgressBar();
+]
+};
